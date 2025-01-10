@@ -8,11 +8,20 @@ class SignupController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final fullNameController = TextEditingController();
-  var isLoading = false.obs;
+  RxBool isLoading = false.obs;
 
-  void registerUser(String email, String passwrod, String fullName) {
-    isLoading(true);
-    AuthServices.instance.createUserWithEmailAndPassword(email, passwrod);
-    isLoading(false);
+  Future<void> registerUser(
+      String email, String password, String fullName) async {
+    try {
+      isLoading(true);
+      await AuthServices.instance
+          .createUserWithEmailAndPassword(email, password);
+      isLoading(false);
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+      isLoading(false);
+    } finally {
+      isLoading(false);
+    }
   }
 }

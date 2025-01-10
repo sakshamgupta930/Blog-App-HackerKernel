@@ -1,4 +1,6 @@
 import 'package:blog_app/core/theme/colors.dart';
+import 'package:blog_app/services/firebase/auth_services.dart';
+import 'package:blog_app/src/controllers/login_controller.dart';
 import 'package:blog_app/src/views/screens/signup_screen.dart';
 import 'package:blog_app/src/views/widgets/bubble.dart';
 import 'package:blog_app/src/views/widgets/roundbutton.dart';
@@ -13,6 +15,8 @@ class LoginScreen extends StatelessWidget {
   final passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  final loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +65,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         SizedBox(height: size.height * .08),
                         TextFormField(
-                          controller: emailController,
+                          controller: loginController.emailController,
                           decoration: const InputDecoration(
                               hintText: 'Email',
                               prefixIcon: Icon(Icons.email_rounded)),
@@ -77,7 +81,7 @@ class LoginScreen extends StatelessWidget {
                         TextFormField(
                           obscureText: true,
                           obscuringCharacter: '*',
-                          controller: passwordController,
+                          controller: loginController.passwordController,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
                             hintText: 'Password',
@@ -91,11 +95,20 @@ class LoginScreen extends StatelessWidget {
                           },
                         ),
                         SizedBox(height: size.height * .06),
-                        RoundButton(
-                          title: 'Login',
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {}
-                          },
+                        Obx(
+                          () => RoundButton(
+                            isLoading: loginController.isLoading.value,
+                            title: 'Login',
+                            onTap: () {
+                              if (_formKey.currentState!.validate()) {
+                                loginController.login(
+                                  loginController.emailController.text.trim(),
+                                  loginController.passwordController.text
+                                      .trim(),
+                                );
+                              }
+                            },
+                          ),
                         ),
                         SizedBox(height: size.height * .01),
                         Row(

@@ -9,9 +9,6 @@ import 'package:get/get_core/src/get_main.dart';
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
 
   final signupController = Get.put(SignupController());
@@ -100,17 +97,20 @@ class SignupScreen extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: size.height * .06),
-                      RoundButton(
-                        title: 'Sign up',
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            signupController.registerUser(
-                              signupController.emailController.text.trim(),
-                              signupController.passwordController.text.trim(),
-                              signupController.fullNameController.text.trim(),
-                            );
-                          }
-                        },
+                      Obx(
+                        () => RoundButton(
+                          isLoading: signupController.isLoading.value,
+                          title: 'Sign up',
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              signupController.registerUser(
+                                signupController.emailController.text.trim(),
+                                signupController.passwordController.text.trim(),
+                                signupController.fullNameController.text.trim(),
+                              );
+                            }
+                          },
+                        ),
                       ),
                       SizedBox(height: size.height * .01),
                       Row(

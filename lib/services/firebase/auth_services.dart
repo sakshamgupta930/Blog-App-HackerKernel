@@ -15,9 +15,11 @@ class AuthServices extends GetxController {
 
   @override
   void onReady() {
-    firebaseUser = _auth.currentUser.obs;
-    firebaseUser.bindStream(_auth.userChanges());
-    ever(firebaseUser, _setInitialScreen);
+    Timer(Duration(seconds: 2), () {
+      firebaseUser = _auth.currentUser.obs;
+      firebaseUser.bindStream(_auth.userChanges());
+      ever(firebaseUser, _setInitialScreen);
+    });
   }
 
   _setInitialScreen(User? user) {
