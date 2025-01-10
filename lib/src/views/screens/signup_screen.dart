@@ -1,4 +1,5 @@
 import 'package:blog_app/core/theme/colors.dart';
+import 'package:blog_app/src/controllers/signup_controller.dart';
 import 'package:blog_app/src/views/widgets/bubble.dart';
 import 'package:blog_app/src/views/widgets/roundbutton.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ class SignupScreen extends StatelessWidget {
   final passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  final signupController = Get.put(SignupController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,22 @@ class SignupScreen extends StatelessWidget {
                       ),
                       SizedBox(height: size.height * .04),
                       TextFormField(
-                        controller: emailController,
+                        controller: signupController.fullNameController,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          hintText: 'Name',
+                          prefixIcon: Icon(Icons.password),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter password';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: size.height * .03),
+                      TextFormField(
+                        controller: signupController.emailController,
                         decoration: const InputDecoration(
                             hintText: 'Email',
                             prefixIcon: Icon(Icons.email_rounded)),
@@ -68,27 +86,10 @@ class SignupScreen extends StatelessWidget {
                       TextFormField(
                         obscureText: true,
                         obscuringCharacter: '*',
-                        controller: passwordController,
+                        controller: signupController.passwordController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           hintText: 'Password',
-                          prefixIcon: Icon(Icons.password),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: size.height * .03),
-                      TextFormField(
-                        obscureText: true,
-                        obscuringCharacter: '*',
-                        controller: passwordController,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          hintText: 'Confirm Password',
                           prefixIcon: Icon(Icons.password),
                         ),
                         validator: (value) {
@@ -102,7 +103,13 @@ class SignupScreen extends StatelessWidget {
                       RoundButton(
                         title: 'Sign up',
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {}
+                          if (_formKey.currentState!.validate()) {
+                            signupController.registerUser(
+                              signupController.emailController.text.trim(),
+                              signupController.passwordController.text.trim(),
+                              signupController.fullNameController.text.trim(),
+                            );
+                          }
                         },
                       ),
                       SizedBox(height: size.height * .01),

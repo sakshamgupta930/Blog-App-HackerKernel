@@ -1,4 +1,5 @@
 import 'package:blog_app/firebase_options.dart';
+import 'package:blog_app/services/firebase/auth_services.dart';
 import 'package:blog_app/src/views/screens/spalsh_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
+  ).then((value) => Get.put(AuthServices()));
   runApp(const MyApp());
 }
 
